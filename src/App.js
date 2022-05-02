@@ -24,6 +24,18 @@ export default function App() {
       notes:"Cobb steals information from his targets by entering their dreams. Saito offers to wipe clean Cobb's criminal history as payment for performing an inception on his sick competitor's son.",
       rate:3.9
     },
+    {
+      name:"Pursuit of Happiness",
+      src:"https://fontmeme.com/images/The-Pursuit-of-Happyness-Poster.jpg",
+      notes:"Tired of Chris's professional failures, his wife decides to separate, leaving him financially broke with an unpaid internship in a brokerage firm and his son's custody to deal with.",
+      rate:4.6
+    },
+    {
+      name:"Inception",
+      src:"https://m.media-amazon.com/images/M/MV5BMTM0MjUzNjkwMl5BMl5BanBnXkFtZTcwNjY0OTk1Mw@@._V1_.jpg",
+      notes:"Cobb steals information from his targets by entering their dreams. Saito offers to wipe clean Cobb's criminal history as payment for performing an inception on his sick competitor's son.",
+      rate:3.9
+    },
    
    
   
