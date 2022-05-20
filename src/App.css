@@ -47,3 +47,34 @@ img{
   padding-left: 25px;
   margin-left:10px ;
 }
+.like-dislike{
+  display: flex;
+  gap: 20px;
+}
+.colorbox{
+  margin-top: 20px;
+}
+
+.detail{
+  display: flex;
+  justify-content: space-between;
+  max-width: 900px;
+}
+.noteofmovie{
+  max-width: 900px;
+}
+.inputs{
+  display: flex;
+  flex-direction: column;
+}
+
+.inputs input{
+  margin-top: 50px;
+  margin-bottom: 2px;
+  width: 900px;
+  height: 20px;
+
+}
+.col-4-lg{
+  margin-left: 50px;
+}
