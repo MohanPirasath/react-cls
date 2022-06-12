@@ -1,6 +1,7 @@
 // import userEvent from "@testing-library/user-event";
 import { useState, useEffect } from "react";
 import "./App.css";
+import * as yup from "yup";
 import {
   Routes,
   Route,
@@ -22,7 +23,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { API } from "./goble";
 
-import { Formik } from 'formik';
+import {  useFormik } from 'formik';
 
 // let movielist1 = [
 //   {
@@ -123,13 +124,13 @@ export default function App() {
               <Button color="inherit" onClick={() => navigate("/")}>
                 Home
               </Button>
-              <Button color="inherit" onClick={() => navigate("/Movies")}>
+              <Button color="inherit" onClick={() => navigate("/movies")}>
                 Movies
               </Button>
               <Button color="inherit" onClick={() => navigate("/Addcolor")}>
                 Addcolor
               </Button>
-              <Button color="inherit" onClick={() => navigate("/Addmovies")}>
+              <Button color="inherit" onClick={() => navigate("/movies/Addmovies")}>
                 Addmovies
               </Button>
               <Button
@@ -146,15 +147,15 @@ export default function App() {
             <div className="row">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/Movies/:id1" element={<Moviedetails />} />
-                <Route path="/Movies/edit/:id1" element={<Editmovie />} />
-                <Route path="/Movies" element={<Movielisted />} />
+                <Route path="/movies/:id1" element={<Moviedetails />} />
+                <Route path="/movies/edit/:id1" element={<Editmovie />} />
+                <Route path="/movies" element={<Movielisted />} />
                 <Route
                   path="/films"
-                  element={<Navigate replace to="/Movies" />}
+                  element={<Navigate replace to="/movies" />}
                 />
                 <Route path="/Addcolor" element={<Addcolor />} />
-                <Route path="/Addmovies" element={<Addmovies />} />
+                <Route path="/movies/Addmovies" element={<Addmovies />} />
                 <Route path="/Notfound" element={<Notfound />} />
                 <Route path="*" element={<Navigate replace to="/Notfound" />} />
               </Routes>
@@ -384,76 +385,111 @@ function Editmovie(){
 }
 
 
+ const formvalidate =yup.object({
+   newmovie:yup.string().required("plz fill this").min(2,"plz give bigger name").max(59),
+   newrate:yup.number().required("this field is required").min(5,"plz give above 5").max(10),
+   newsrc:yup.string().required("this is needy").min(2),
+   newnotes:yup.string().required("fill this").min(2),
+   newtrailer:yup.string().required("complete it").min(2)
+ })
+
 function Edit({movie}){
   const navigate = useNavigate();
 
-  let [newmovie, setnewmovie] = useState(movie.name);
+  const {handleChange,handleSubmit,values,errors,handleBlur,touched}=useFormik({
+    initialValues:{newmovie:`${movie.name}`,
+    newrate:`${movie.rate}`,
+    newsrc:`${movie.src}`,
+    newnotes:`${movie.notes}`,
+    newtrailer:`${movie.trailer}`},
+    validationSchema: formvalidate
+  })
 
-  let [newrate, setnewrate] = useState(movie.rate);
+  // let [newmovie, setnewmovie] = useState(movie.name);
 
-  let [newsrc, setnewsrc] = useState(movie.src);
-  let [newnotes, setnewnotes] = useState(movie.notes);
-  let [newtrailer, setnewtrailer] = useState(movie.trailer);
+  // let [newrate, setnewrate] = useState(movie.rate);
+
+  // let [newsrc, setnewsrc] = useState(movie.src);
+  // let [newnotes, setnewnotes] = useState(movie.notes);
+  // let [newtrailer, setnewtrailer] = useState(movie.trailer);
   return(
     <div>
      
   
     <div className="newmovie">
      
-      <div className="inputs">
+      <form onSubmit={handleSubmit} className="inputs">
         <TextField
+          name="newmovie"
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Name"
           variant="outlined"
-          value={newmovie}
-          onChange={(e) => setnewmovie(e.target.value)}
+          value={values.newmovie}
+          // onChange={(e) => setnewmovie(e.target.value)}
+           onChange={handleChange}
+           onBlur={handleBlur}
         />
+        {errors.newmovie && touched.newmovie? errors.newmovie:``}
         <TextField
+          name="newrate"
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Rating"
           variant="outlined"
-          value={newrate}
-
-          onChange={(e) => setnewrate(e.target.value)}
+          value={values.newrate}
+          onBlur={handleBlur}
+          onChange={handleChange}
         />
+        {errors.newrate && touched.newrate?errors.newrate:``}
         <TextField
+          name="newsrc"
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Src"
-          value={newsrc}
+          value={values.newsrc}
           variant="outlined"
-          onChange={(e) => setnewsrc(e.target.value)}
+          // onChange={(e) => setnewsrc(e.target.value)}
+           onBlur={handleBlur}
+           onChange={handleChange}
         />
+        {errors.newsrc && touched.newsrc? errors.newsrc:""}
         <TextField
+          name="newnotes"
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Notes"
-          value={newnotes}
+          value={values.newnotes}
 
           
           variant="outlined"
-          onChange={(e) => setnewnotes(e.target.value)}
+          // onChange={(e) => setnewnotes(e.target.value)}
+           onBlur={handleBlur}
+           onChange={handleChange}
         />
+        {errors.newnotes && touched.newnotes? errors.newnotes:""}
         <TextField
+          name="newtrailer"
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Trailer"
-          value={newtrailer}
+          value={values.newtrailer}
           variant="outlined"
-          onChange={(e) => setnewtrailer(e.target.value)}
+          // onChange={(e) => setnewtrailer(e.target.value)}
+           onBlur={handleBlur}
+           onChange={handleChange}
         />
-      </div>
+        {errors.newtrailer && touched.newtrailer? errors.newtrailer:""}
+      </form>
       <Button
         variant="contained"
         onClick={() => {
           const editmovie = {
-            name: newmovie,
-            rate: newrate,
-            notes: newnotes,
-            src: newsrc,
-            trailer: newtrailer,
+            name:values.newmovie,
+            rate:values.newrate,
+            notes:values.newnotes,
+            src:values.newsrc,
+            trailer:values.newtrailer,
           };
            
           fetch(`${API}/movies/${movie.id}`,{method:"PUT",body:JSON.stringify(editmovie),
@@ -474,65 +510,105 @@ function Edit({movie}){
   )
 }
 
+const addformschema=yup.object({
+  newmovie:yup.string().required("Fill the name of movie").min(3,"giver bigger name"),
+  newrate:yup.number().required("Rate the movie").min(5,"plz rate above 5"),
+  newsrc:yup.string().required("Poster link ").min(3,"fill the link fully"),
+  newnotes:yup.string().required("some details about Movie").min(3,"fill some more"),
+  newtrailer:yup.string().required("Trailer link").min(3,"fill full link")
+})
 
 function Addmovies() {
-  const navigate = useNavigate()
-  let [newmovie, setnewmovie] = useState("");
-  let [newrate, setnewrate] = useState("");
-  let [newsrc, setnewsrc] = useState("");
-  let [newnotes, setnewnotes] = useState("");
-  let [newtrailer, setnewtrailer] = useState("");
+  const navigate = useNavigate();
+const {handleBlur,handleChange,values,touched,errors,handleSubmit}=useFormik({
+  initialValues:{
+    newmovie:``,
+    newrate:``,
+    newsrc:``,
+    newnotes:``,
+    newtrailer:""
+  },
+  validationSchema: addformschema
+})
+
+  // let [newmovie, setnewmovie] = useState("");
+  // let [newrate, setnewrate] = useState("");
+  // let [newsrc, setnewsrc] = useState("");
+  // let [newnotes, setnewnotes] = useState("");
+  // let [newtrailer, setnewtrailer] = useState("");
   return (
     <div className="newmovie">
       <div>
         {/* {templist.map((a,index)=><Pro key={index} name={a.name} src={a.src} notes={a.notes} rate={a.rate}/>)} */}
       </div>
-      <div className="inputs">
+      <form  onSubmit={handleSubmit} className="inputs">
         <TextField
+        name="newmovie"
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Name"
           variant="outlined"
-          onChange={(e) => setnewmovie(e.target.value)}
+          // onChange={(e) => setnewmovie(e.target.value)}
+          onChange={handleChange}
+          onBlur={handleBlur}
         />
+        {errors.newmovie && touched.newmovie? errors.newmovie:""}
         <TextField
+        name="newrate"
+
           id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Rating"
           variant="outlined"
-          onChange={(e) => setnewrate(e.target.value)}
+          // onChange={(e) => setnewrate(e.target.value)}
+          onChange={handleChange}
+          onBlur={handleBlur}
+
         />
+        {errors.newrate && touched.newrate?errors.newrate:""}
         <TextField
-          id="outlined-basic"
+        name="newsrc"
+        id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Src"
           variant="outlined"
-          onChange={(e) => setnewsrc(e.target.value)}
+          // onChange={(e) => setnewsrc(e.target.value)}
+          onBlur={handleBlur}
+          onChange={handleChange}
         />
+        {errors.newsrc && touched.newsrc? errors.newsrc:""}
         <TextField
-          id="outlined-basic"
+        name="newnotes"
+        id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Notes"
           variant="outlined"
-          onChange={(e) => setnewnotes(e.target.value)}
+          // onChange={(e) => setnewnotes(e.target.value)}
+          onBlur={handleBlur}
+          onChange={handleChange}
         />
+        {errors.newnotes && touched.newnotes? errors.newnotes:""}
         <TextField
-          id="outlined-basic"
+        name="newtrailer"
+        id="outlined-basic"
           sx={{ marginTop: "30px" }}
           label="Trailer"
           variant="outlined"
-          onChange={(e) => setnewtrailer(e.target.value)}
+          // onChange={(e) => setnewtrailer(e.target.value)}
+          onBlur={handleBlur}
+          onChange={handleChange}
         />
-      </div>
+        {errors.newtrailer && touched.newtrailer? errors.newtrailer:""}
       <Button
+      name="submit"
         variant="text"
         onClick={() => {
           const newaddedmovie = {
-            name: newmovie,
-            rate: newrate,
-            notes: newnotes,
-            src: newsrc,
-            trailer: newtrailer,
+            name:values.newmovie,
+            rate:values.newrate,
+            notes:values.newnotes,
+            src:values.newsrc,
+            trailer:values.newtrailer,
           };
            
           fetch(`${API}/movies`,{method:"POST",body:JSON.stringify(newaddedmovie),
@@ -547,6 +623,8 @@ function Addmovies() {
       >
         Add movie
       </Button>
+      </form>
+
     </div>
   );
 }
